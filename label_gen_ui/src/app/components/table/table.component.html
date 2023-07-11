@@ -1,0 +1,40 @@
+<div class="table-div">
+  <div class="table-header">
+    <h2>
+      Label List
+    </h2>
+    <div class="header-container">
+      <div class="header-input">
+        <mat-icon>search</mat-icon>
+        <input type="text">
+      </div>
+      <mat-icon>restore_from_trash</mat-icon>
+    </div>
+  </div>
+  <table mat-table [dataSource]="this.labelList" class="mat-elevation-z8 table">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Data de Criação</th>
+      <td mat-cell *matCellDef="let element"> {{element.created_at.substring(0, 10)}} </td>
+    </ng-container>
+    <ng-container matColumnDef="key">
+      <th mat-header-cell *matHeaderCellDef>Chave</th>
+      <td mat-cell *matCellDef="let element"> {{element.keyLabel}} </td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Valor</th>
+      <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let element" class="actions-container">
+        <mat-icon class="mr-2"> border_color</mat-icon>
+        <mat-icon class="mr-2">file_copy</mat-icon>
+        <input type="checkbox" class="checkbox">
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+
