@@ -16,6 +16,7 @@ import { NavComponent } from './components/nav/nav.component';
 import {MatButtonModule} from "@angular/material/button";
 import {NgOptimizedImage} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { ReplaceComponent } from './replace/replace.component';
 
 @NgModule({
   declarations: [

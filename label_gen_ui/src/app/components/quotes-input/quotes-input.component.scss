@@ -21,11 +21,14 @@
 }
 .t2{
   background-color: crimson;
+
 }
 .t4{
   background-color: blue;
 }
-
+.entrada{
+  height: 100%;
+}
 .titulos {
   display: flex;
   align-items: center;
@@ -35,4 +38,9 @@
   height: 95%;
   vertical-align: top;
   color: #222222;
+}
+.custom-input-entrada{
+  color: #222222;
+  width: 80%;
+  height: 430px;
 }

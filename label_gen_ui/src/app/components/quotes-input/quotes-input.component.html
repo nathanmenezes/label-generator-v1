@@ -6,15 +6,17 @@
         <h4 class="m-2">Entrada de Frases</h4>
       </div>
 
-      <div class="row h-75 d-flex justify-content-center align-items-center">
-        <input type="text" class="custom-input" name="html" [ngModel]="html">
+      <div class="row entrada h-100 d-flex justify-content-center">
+        <textarea class="custom-input-entrada mt-1"
+                  name="html"
+                  [(ngModel)]="html.html"
+          ></textarea>
       </div>
-      <button (click)="sendHtml()">Enviar</button>
     </div>
 
 <!--    output-->
     <div class="col">
-<!--        Section criadas-->
+<!--    Section criadas-->
       <div class="row h-50">
         <div class="col">
           <div class="row titulos">
@@ -23,7 +25,7 @@
           </div>
 
           <div class="row h-75 d-flex justify-content-center align-items-center">
-            <input type="text" class="custom-input" value="{{html}}">
+              <textarea class="custom-input"></textarea>
           </div>
         </div>
       </div>
@@ -36,15 +38,16 @@
             </div>
 
             <div class="row h-75 d-flex justify-content-center align-items-center">
-              <input type="text" class="custom-input">
+                <textarea class="custom-input"></textarea>
             </div>
           </div>
         </div>
     </div>
   </div>
 </div>
+
   <div class="row">
     <div class="col d-flex justify-content-around align-items-center">
-      <button class="m-3 t1" mat-button routerLink="/"><h3 class="m-1">Criar</h3></button>
+      <button class="m-3 t1" mat-button (click)="sendHtml()"><h3 class="m-1">Criar</h3></button>
     </div>
   </div>
