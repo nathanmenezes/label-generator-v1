@@ -12,4 +12,8 @@ export class LabelService {
   findAll(): Observable<any>{
     return this.http.get(this.url);
   }
+
+  sendHtml(html: { html: string }): Observable<any>{
+    return this.http.post(this.url+"/replace", html);
+  }
 }

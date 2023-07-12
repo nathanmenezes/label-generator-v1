@@ -1,6 +1,7 @@
 package br.com.omotor.labelcreatorproject.resource;
 
 import br.com.omotor.labelcreatorproject.model.*;
+import br.com.omotor.labelcreatorproject.model.dto.Html;
 import br.com.omotor.labelcreatorproject.model.dto.LabelDto;
 import br.com.omotor.labelcreatorproject.model.dto.Quotes;
 import br.com.omotor.labelcreatorproject.model.dto.ReturnMessage;
@@ -48,5 +49,11 @@ public class LabelResource {
     public ResponseEntity<?> searchLabel(@RequestParam String value) {
         return service.searchLabel(value);
     }
+
+    @PostMapping("/replace")
+    public ResponseEntity<?> replaceLabel(@RequestBody Html html){
+        return service.replaceLabel(html);
+    }
+
 
 }

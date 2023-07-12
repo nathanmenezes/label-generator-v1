@@ -75,4 +75,19 @@ public class LabelService {
     public ResponseEntity<?> searchLabel(String value) {
         return ResponseEntity.status(200).body(repository.findByValueContainingOrKeyLabelContaining(value, value));
     }
+
+    public ResponseEntity<?> replaceLabel(Html html) {
+        List<SystemTranslate> labels = repository.findAll();
+        List<String> replacedLabels = new ArrayList<>();
+
+        labels.forEach(label ->{
+            CharSequence charSequence = label.getValue();
+            if(html.getHtml().contains(charSequence)){
+                html.setHtml(html.getHtml().replace(label.getValue(), label.getKeyLabel()));
+                replacedLabels.add(label.getValue());
+            }
+        });
+
+        return ResponseEntity.status(200).body(html);
+    }
 }

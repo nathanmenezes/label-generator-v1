@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {LabelService} from "../../service/label.service";
 
 @Component({
   selector: 'app-quotes-input',
@@ -7,7 +8,28 @@ import { Component } from '@angular/core';
 })
 export class QuotesInputComponent {
 
+  constructor(private service:LabelService) {
+  }
+
   words:string[] = [];
+
+  html:string = ``;
+
+  htmlData = {
+    html: this.html
+  };
+
+  sendHtml(){
+    this.service.sendHtml(this.htmlData).subscribe((resp) =>{
+      this.html = resp;
+      console.log(resp);
+    },
+        error => {
+        console.log(error);
+        }
+    )
+  }
+
 
   separateWords(word:String){
     // Remove espaços em branco antes e depois do texto

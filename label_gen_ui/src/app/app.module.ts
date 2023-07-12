@@ -15,6 +15,7 @@ import { QuotesInputComponent } from './components/quotes-input/quotes-input.com
 import { NavComponent } from './components/nav/nav.component';
 import {MatButtonModule} from "@angular/material/button";
 import {NgOptimizedImage} from "@angular/common";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -25,17 +26,19 @@ import {NgOptimizedImage} from "@angular/common";
     QuotesInputComponent,
     NavComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatToolbarModule,
-    HttpClientModule,
-    MatIconModule,
-    MatButtonModule,
-    NgOptimizedImage
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatToolbarModule,
+        HttpClientModule,
+        MatIconModule,
+        MatButtonModule,
+        NgOptimizedImage,
+        ReactiveFormsModule,
+        FormsModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -7,8 +7,9 @@
       </div>
 
       <div class="row h-75 d-flex justify-content-center align-items-center">
-        <input type="text" class="custom-input">
+        <input type="text" class="custom-input" name="html" [ngModel]="html">
       </div>
+      <button (click)="sendHtml()">Enviar</button>
     </div>
 
 <!--    output-->
@@ -22,7 +23,7 @@
           </div>
 
           <div class="row h-75 d-flex justify-content-center align-items-center">
-            <input type="text" class="custom-input">
+            <input type="text" class="custom-input" value="{{html}}">
           </div>
         </div>
       </div>
