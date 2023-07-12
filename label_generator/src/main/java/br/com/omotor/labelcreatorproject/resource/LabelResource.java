@@ -57,4 +57,9 @@ public class LabelResource {
     public ResponseEntity<List<SystemTranslateDto>> searchLabelProject(@PathVariable Long id){
         return service.searchLabelProject(id);
     }
+
+    @GetMapping("/sql/{id}")
+    public ResponseEntity<ReturnMessage> generateSql(@PathVariable(value = "id") Long projectId, @RequestParam Integer systemLocaleId){
+        return service.generateSql(projectId, systemLocaleId);
+    }
 }

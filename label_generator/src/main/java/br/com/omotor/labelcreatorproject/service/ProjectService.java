@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProjectService {
 
@@ -26,5 +28,28 @@ public class ProjectService {
         BeanUtils.copyProperties(projectDto, project);
         repository.save(project);
         return ResponseEntity.status(201).body(new ReturnMessage("Projeto Cadastrado com Sucesso!", project));
+    }
+
+    public ResponseEntity<List<ProjectDto>> listProjects() {
+        return ResponseEntity.status(200).body(repository.findAll().stream().map(ProjectDto :: new).toList());
+    }
+
+    public ResponseEntity<ReturnMessage> deleteProject(ProjectDto projectDto) {
+        repository.deleteById(projectDto.getId());
+        return ResponseEntity.status(200).body(new ReturnMessage("Projeto deletado com sucesso!", projectDto));
+    }
+
+    public ResponseEntity<ReturnMessage> editProject(ProjectDto projectDto) {
+        Project project = repository.findById(projectDto.getId()).get();
+        project.editProject(projectDto);
+        repository.save(project);
+        BeanUtils.copyProperties(project, projectDto);
+        return ResponseEntity.status(200).body(new ReturnMessage("Projeto Alterado com Sucesso!", projectDto));
+    }
+
+    public ResponseEntity<ProjectDto> listProjectById(Long id) {
+        ProjectDto dto = new ProjectDto();
+        BeanUtils.copyProperties(repository.findById(id).get(), dto);
+        return ResponseEntity.status(200).body(dto);
     }
 }

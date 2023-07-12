@@ -29,6 +29,6 @@ public class SystemTranslateDto {
         this.created_at = sdf.format(st.getCreated_at());
         this.keyLabel = st.getKeyLabel();
         this.value = st.getValue();
-        this.system_locale_id = st.getSystem_locale_id();
+        this.system_locale_id = st.getSystemLocaleId();
     }
 }

@@ -1,5 +1,6 @@
 package br.com.omotor.labelcreatorproject.model;
 
+import br.com.omotor.labelcreatorproject.model.dto.ProjectDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +20,20 @@ public class Project {
     private String name;
     private String devUrl;
     private String prodUrl;
+    private String dataBaseName;
+
+    public void editProject(ProjectDto projectDto){
+        if(projectDto.getName() != null){
+            this.name = projectDto.getName();
+        }
+        if(projectDto.getDevUrl() != null){
+            this.devUrl = projectDto.getDevUrl();
+        }
+        if(projectDto.getProdUrl() != null){
+            this.prodUrl = projectDto.getProdUrl();
+        }
+        if(projectDto.getDataBaseName() != null){
+            this.dataBaseName = projectDto.getDataBaseName();
+        }
+    }
 }

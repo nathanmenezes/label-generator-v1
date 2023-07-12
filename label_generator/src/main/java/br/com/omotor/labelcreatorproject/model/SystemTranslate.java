@@ -26,14 +26,16 @@ public class SystemTranslate {
 
     private String value;
 
-    private Integer system_locale_id = 1;
+    private Integer systemLocaleId;
 
     @ManyToOne
     private Project project;
 
-    public SystemTranslate(String key, String value) {
+    public SystemTranslate(String key, String value, Integer systemLocaleId, Project project) {
         this.keyLabel = key;
         this.value = value;
+        this.systemLocaleId = systemLocaleId;
+        this.project = project;
     }
 
     public void edit(LabelDto labelDto){

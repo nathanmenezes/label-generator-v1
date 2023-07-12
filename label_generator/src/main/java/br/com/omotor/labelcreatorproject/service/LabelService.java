@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +34,8 @@ public class LabelService {
         RestTemplate template = new RestTemplate();
         List<SystemTranslate> approvedLabels = new ArrayList<>();
         List<SystemTranslate> reprovedLabels = new ArrayList<>();
+        Project project = projectRepository.findById(quotesList.getIdProject()).get();
+        HashMap<String, String> labels = labelClient.fetchLabels(URI.create(project.getDevUrl()));
         quotesList.getQuotes().forEach(quote -> {
             quote = quote.trim();
             String url = "https://api.mymemory.translated.net/get?q=" + quote + "&langpair=pt|en";
@@ -41,17 +43,22 @@ public class LabelService {
             assert matches != null;
             String translation = matches.getMatches().get(0).getTranslation();
             String labelNick = "label_" + translation.replace(" ", "_").toLowerCase();
-            SystemTranslate systemTranslate = new SystemTranslate(labelNick, quote);
-            HashMap<String, String> labels = labelClient.fetchLabels(URI.create("https://cashback-ms-dev.omotor.com.br/system/translate/pt-BR"));
-            if (repository.existsByValueAndKeyLabel(systemTranslate.getValue(), systemTranslate.getKeyLabel())) {
-                reprovedLabels.add(systemTranslate);
-            } else if (labels.containsKey(systemTranslate.getKeyLabel()) && labels.containsValue(systemTranslate.getValue())) {
-                reprovedLabels.add(systemTranslate);
+            SystemTranslate systemTranslatePt = new SystemTranslate(labelNick, quote, 1, project);
+            SystemTranslate systemTranslateEn = new SystemTranslate(labelNick, translation, 2, project);
+            if (repository.existsByValueAndKeyLabel(systemTranslatePt.getValue(), systemTranslatePt.getKeyLabel())) {
+                reprovedLabels.add(systemTranslatePt);
+            } else if (labels.containsKey(systemTranslatePt.getKeyLabel()) && labels.containsValue(systemTranslatePt.getValue())) {
+                reprovedLabels.add(systemTranslatePt);
+            }
+            if (repository.existsByValueAndKeyLabel(systemTranslateEn.getValue(), systemTranslateEn.getKeyLabel())) {
+                reprovedLabels.add(systemTranslateEn);
+            } else if (labels.containsKey(systemTranslateEn.getKeyLabel()) && labels.containsValue(systemTranslateEn.getValue())) {
+                reprovedLabels.add(systemTranslateEn);
             } else {
-                Project project = projectRepository.findById(quotesList.getIdProject()).get();
-                systemTranslate.setProject(project);
-                repository.save(systemTranslate);
-                approvedLabels.add(systemTranslate);
+                repository.save(systemTranslatePt);
+                repository.save(systemTranslateEn);
+                approvedLabels.add(systemTranslatePt);
+                approvedLabels.add(systemTranslateEn);
             }
         });
         return ResponseEntity.status(200).body(new ReturnMessage("Labels cadastrada com sucesso!", new LabelResults(approvedLabels, reprovedLabels)));
@@ -104,6 +111,25 @@ public class LabelService {
     }
 
     public ResponseEntity<List<SystemTranslateDto>> searchLabelProject(Long id) {
-        return null;
+        return ResponseEntity.status(200).body(repository.findAllByProjectId(id).stream().map(SystemTranslateDto::new).toList());
+    }
+
+    public ResponseEntity<ReturnMessage> generateSql(Long projectId, Integer systemLocaleId) {
+        Project project = projectRepository.findById(projectId).get();
+        HashMap<String, String> labels = labelClient.fetchLabels(URI.create(project.getDevUrl()));
+
+        List<SystemTranslate> labelList = repository.findAllByProjectIdAndSystemLocaleId(projectId, systemLocaleId);
+
+        StringBuilder sqlCommand = new StringBuilder("INSERT INTO `" + project.getDataBaseName() + "`.`system_translate` (`created_at`, `key`, `value`, `system_locale_id`) VALUES \n");
+
+        for (SystemTranslate label: labelList) {
+            if (!labels.containsKey(label.getKeyLabel()) && !labels.containsValue(label.getValue())) {
+                sqlCommand.append("(now(), ").append("'").append(label.getKeyLabel()).append("'").append(", ").append("'").append(label.getValue()).append("'").append(", '").append(label.getSystemLocaleId()).append("'),\n");
+            }
+        }
+        sqlCommand.deleteCharAt(sqlCommand.lastIndexOf(","));
+        sqlCommand.deleteCharAt(sqlCommand.lastIndexOf("\n"));
+        sqlCommand.append(";");
+        return ResponseEntity.status(200).body(new ReturnMessage("SQL Gerado com Sucesso!", sqlCommand));
     }
 }
