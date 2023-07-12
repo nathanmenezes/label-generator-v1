@@ -1,0 +1,46 @@
+.create_component{
+  width: 70vw;
+  height: 500px;
+  background-color: #222222;
+}
+.recusado{
+  width: 20px;
+  height: 20px;
+  background-color: crimson;
+}
+.aprovado{
+  width: 20px;
+  height: 20px;
+  background-color: #1BF931;
+}
+.t3{
+  background-color: aqua;
+}
+.t1{
+  background-color: #1BF931;
+}
+.t2{
+  background-color: crimson;
+
+}
+.t4{
+  background-color: blue;
+}
+.entrada{
+  height: 100%;
+}
+.titulos {
+  display: flex;
+  align-items: center;
+}
+.custom-input {
+  width: 80%;
+  height: 95%;
+  vertical-align: top;
+  color: #222222;
+}
+.custom-input-entrada{
+  color: #222222;
+  width: 80%;
+  height: 430px;
+}
