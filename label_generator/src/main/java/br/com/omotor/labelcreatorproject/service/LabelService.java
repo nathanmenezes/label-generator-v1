@@ -2,6 +2,7 @@ package br.com.omotor.labelcreatorproject.service;
 
 import br.com.omotor.labelcreatorproject.model.*;
 import br.com.omotor.labelcreatorproject.model.dto.*;
+import br.com.omotor.labelcreatorproject.repository.ProjectRepository;
 import br.com.omotor.labelcreatorproject.repository.SystemTranslateRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ public class LabelService {
     @Autowired
     private SystemTranslateRepository repository;
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Transactional
     public ResponseEntity<ReturnMessage> createLabel(Quotes quotesList) {
@@ -33,11 +35,12 @@ public class LabelService {
             assert matches != null;
             String translation = matches.getMatches().get(0).getTranslation();
             String labelNick = "label_" + translation.replace(" ", "_").toLowerCase();
-            String typescript = "{{"+ "'" + labelNick + "'" + " | translate}}";
-            SystemTranslate systemTranslate = new SystemTranslate(typescript, quote);
+            SystemTranslate systemTranslate = new SystemTranslate(labelNick, quote);
             if(repository.existsByValueAndKeyLabel(systemTranslate.getValue(), systemTranslate.getKeyLabel())){
                reprovedLabels.add(systemTranslate);
             }else{
+                Project project = projectRepository.findById(quotesList.getIdProject()).get();
+                systemTranslate.setProject(project);
                 approvedLabels.add(systemTranslate);
             }
         });
@@ -45,8 +48,8 @@ public class LabelService {
         return ResponseEntity.status(200).body(new ReturnMessage("Labels cadastrada com sucesso!", new LabelResults(approvedLabels, reprovedLabels)));
     }
 
-    public ResponseEntity<List<SystemTranslate>> findAllLabels() {
-        return ResponseEntity.status(200).body(repository.findAll());
+    public ResponseEntity<List<SystemTranslateDto>> findAllLabels() {
+        return ResponseEntity.status(200).body(repository.findAll().stream().map(SystemTranslateDto::new).toList());
     }
 
     public ResponseEntity<ReturnMessage> deleteLabel(Long id) {
@@ -83,11 +86,15 @@ public class LabelService {
         labels.forEach(label ->{
             CharSequence charSequence = label.getValue();
             if(html.getHtml().contains(charSequence)){
-                html.setHtml(html.getHtml().replace(label.getValue(), label.getKeyLabel()));
+                html.setHtml(html.getHtml().replace(label.getValue(), "{{"+ "'" + label.getKeyLabel() + "'" + " | translate}}"));
                 replacedLabels.add(label.getValue());
             }
         });
 
         return ResponseEntity.status(200).body(html);
+    }
+
+    public ResponseEntity<List<SystemTranslateDto>> searchLabelProject(Long id) {
+        return null;
     }
 }

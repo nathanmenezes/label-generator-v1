@@ -28,6 +28,9 @@ public class SystemTranslate {
 
     private Integer system_locale_id = 1;
 
+    @ManyToOne
+    private Project project;
+
     public SystemTranslate(String key, String value) {
         this.keyLabel = key;
         this.value = value;

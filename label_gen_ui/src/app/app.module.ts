@@ -24,7 +24,8 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     HomeComponent,
     CreateComponent,
     QuotesInputComponent,
-    NavComponent
+    NavComponent,
+    ReplaceComponent
   ],
     imports: [
         BrowserModule,

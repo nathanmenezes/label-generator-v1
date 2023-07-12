@@ -1,11 +1,9 @@
 package br.com.omotor.labelcreatorproject.resource;
 
 import br.com.omotor.labelcreatorproject.model.*;
-import br.com.omotor.labelcreatorproject.model.dto.Html;
-import br.com.omotor.labelcreatorproject.model.dto.LabelDto;
-import br.com.omotor.labelcreatorproject.model.dto.Quotes;
-import br.com.omotor.labelcreatorproject.model.dto.ReturnMessage;
+import br.com.omotor.labelcreatorproject.model.dto.*;
 import br.com.omotor.labelcreatorproject.service.LabelService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +19,12 @@ public class LabelResource {
     private LabelService service;
 
     @PostMapping
-    public ResponseEntity<ReturnMessage> createLabel(@RequestBody Quotes quotesList) {
+    public ResponseEntity<ReturnMessage> createLabel(@RequestBody @Valid Quotes quotesList) {
         return service.createLabel(quotesList);
     }
 
     @GetMapping
-    public ResponseEntity<List<SystemTranslate>> findAllLabels() {
+    public ResponseEntity<List<SystemTranslateDto>> findAllLabels() {
         return service.findAllLabels();
     }
 
@@ -55,5 +53,8 @@ public class LabelResource {
         return service.replaceLabel(html);
     }
 
-
+    @GetMapping("/project/{id}")
+    public ResponseEntity<List<SystemTranslateDto>> searchLabelProject(@PathVariable Long id){
+        return service.searchLabelProject(id);
+    }
 }
