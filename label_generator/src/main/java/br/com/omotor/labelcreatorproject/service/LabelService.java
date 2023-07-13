@@ -45,20 +45,14 @@ public class LabelService {
             String labelNick = "label_" + translation.replace(" ", "_").toLowerCase();
             SystemTranslate systemTranslatePt = new SystemTranslate(labelNick, quote, 1, project);
             SystemTranslate systemTranslateEn = new SystemTranslate(labelNick, translation, 2, project);
-            if (repository.existsByValueAndKeyLabel(systemTranslatePt.getValue(), systemTranslatePt.getKeyLabel())) {
+            if (repository.existsByValueAndKeyLabelAndProjectId(systemTranslatePt.getValue(), systemTranslatePt.getKeyLabel(), systemTranslatePt.getProject().getId())) {
                 reprovedLabels.add(systemTranslatePt);
             } else if (labels.containsKey(systemTranslatePt.getKeyLabel()) && labels.containsValue(systemTranslatePt.getValue())) {
                 reprovedLabels.add(systemTranslatePt);
-            }
-            if (repository.existsByValueAndKeyLabel(systemTranslateEn.getValue(), systemTranslateEn.getKeyLabel())) {
-                reprovedLabels.add(systemTranslateEn);
-            } else if (labels.containsKey(systemTranslateEn.getKeyLabel()) && labels.containsValue(systemTranslateEn.getValue())) {
-                reprovedLabels.add(systemTranslateEn);
             } else {
                 repository.save(systemTranslatePt);
                 repository.save(systemTranslateEn);
                 approvedLabels.add(systemTranslatePt);
-                approvedLabels.add(systemTranslateEn);
             }
         });
         return ResponseEntity.status(200).body(new ReturnMessage("Labels cadastrada com sucesso!", new LabelResults(approvedLabels, reprovedLabels)));
@@ -122,7 +116,7 @@ public class LabelService {
 
         StringBuilder sqlCommand = new StringBuilder("INSERT INTO `" + project.getDataBaseName() + "`.`system_translate` (`created_at`, `key`, `value`, `system_locale_id`) VALUES \n");
 
-        for (SystemTranslate label: labelList) {
+        for (SystemTranslate label : labelList) {
             if (!labels.containsKey(label.getKeyLabel()) && !labels.containsValue(label.getValue())) {
                 sqlCommand.append("(now(), ").append("'").append(label.getKeyLabel()).append("'").append(", ").append("'").append(label.getValue()).append("'").append(", '").append(label.getSystemLocaleId()).append("'),\n");
             }

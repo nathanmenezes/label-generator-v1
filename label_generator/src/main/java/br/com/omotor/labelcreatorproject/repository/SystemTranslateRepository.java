@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface SystemTranslateRepository extends JpaRepository<SystemTranslate, Long> {
-    boolean existsByValueAndKeyLabel(String value, String key);
+    boolean existsByValueAndKeyLabelAndProjectId(String value, String key, Long projectId);
 
     List<SystemTranslate> findByValueContainingOrKeyLabelContaining(String value, String keyLabel);
     List<SystemTranslate> findAllByProjectId(Long id);
